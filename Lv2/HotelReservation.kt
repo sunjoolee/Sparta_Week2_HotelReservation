@@ -111,10 +111,12 @@ class HotelReservation {
 
     //메뉴 2. 예약 목록 출력
     private fun runMenu2(){
+        println("호텔 예약 목록입니다.")
         reservationInfoCollection.printReservationInfoCollection()
     }
     //메뉴 3. 예약 목록 (정렬) 출력
     private fun runMenu3(){
+        println("호텔 예약 목록입니다. (정렬 완료)")
         reservationInfoCollection.printSortedReservationInfoCollection()
     }
     //메뉴 4. 시스템 종료

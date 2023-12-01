@@ -58,7 +58,7 @@ class HotelReservation {
 
         //(2) 방 번호 입력받기
         var roomNum = 0
-        while(100 <= roomNum && roomNum <= 999 ) {
+        while(roomNum < 100 || 999< roomNum) {
             println("예약할 방 번호를 입력해주세요.")
             roomNum = readLine()!!.toInt() - '0'.code
 

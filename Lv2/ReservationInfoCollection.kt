@@ -19,11 +19,9 @@ class ReservationInfoCollection {
     }
 
     fun printReservationInfoCollection(){
-        println("호텔 예약 목록입니다.")
         printReservationInfoList()
     }
     fun printSortedReservationInfoCollection(){
-        println("호텔 예약 목록입니다. (정렬 완료)")
         reservationInfoList.sortBy{it.checkIn}
         printReservationInfoList()
     }

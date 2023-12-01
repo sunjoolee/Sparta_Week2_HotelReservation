@@ -17,7 +17,7 @@ class HotelReservation {
         "예약 변경/취소")
 
     //예약 목록
-    private var reservationInfoList = arrayOf<ReservationInfo>()
+    private var reservationInfoCollection= ReservationInfoCollection()
     //입출금 내역 목록
     private var transactionInfoList = arrayOf<TransactionInfo>()
     
@@ -50,24 +50,6 @@ class HotelReservation {
         println()
     }
 
-    private fun isRoomAvailable(inputRoomNum:Int, inputCheckIn:String, inputCheckOut:String):Boolean{
-        //(1) a---a b---b true
-        //(2) a---b===a---b false
-        //(3) a---b===b---a false
-        //(4) b---a===b---a false
-        //(5) b---b a---a true
-
-        for(i in 0 until reservationInfoList.size){
-            if(reservationInfoList[i].roomNum != inputRoomNum) continue
-
-            //(2) & (3)
-            if(reservationInfoList[i].checkIn <= inputCheckIn && inputCheckIn <= reservationInfoList[i].checkOut) return false
-            //(3) & (4)
-            if(reservationInfoList[i].checkIn <= inputCheckOut && inputCheckOut <= reservationInfoList[i].checkOut) return false
-        }
-        return true
-    }
-
     //메뉴 1. 방 예약
     private fun runMenu1(){
         //(1) 이름 입력 받기
@@ -76,9 +58,9 @@ class HotelReservation {
 
         //(2) 방 번호 입력받기
         var roomNum = 0
-        while(100 <= roomNum && roomNum <= 999 ) {
+        while(roomNum < 100 || 999< roomNum) {
             println("예약할 방 번호를 입력해주세요.")
-            roomNum = readLine()!!.toInt() - '0'.code
+            roomNum = readLine()!!.toInt()
 
             if(roomNum < 100 || 999< roomNum) println("올바르지 않은 방 번호입니다. 방 번호는 100부터 999까지 입니다.")
         }
@@ -112,7 +94,7 @@ class HotelReservation {
             }
 
             //예약 가능한 기간인지 확인
-            if(isRoomAvailable(roomNum, checkIn, checkOut)) break;
+            if(reservationInfoCollection.isRoomAvailable(roomNum, checkIn, checkOut)) break;
             else println("해당 기간에 이미 방을 사용 중입니다. 다른 날짜를 선택해주세요.")
         }
 
@@ -122,33 +104,18 @@ class HotelReservation {
 
         //(5) 호텔 예약 내역 저장하기
         val newReservationInfo = ReservationInfo(name, roomNum, checkIn, checkOut)
-        reservationInfoList += newReservationInfo
+        reservationInfoCollection.addReservationInfo(newReservationInfo)
+
         println("호텔 예약이 완료되었습니다.")
-    }
-
-    private fun printReservationInfoList(){
-        for(i in 0 until reservationInfoList.size){
-            val name = reservationInfoList[i].name
-            val roomNum = reservationInfoList[i].roomNum
-            var checkIn = reservationInfoList[i].checkIn
-            var checkOut = reservationInfoList[i].checkOut
-
-            checkIn = checkIn.substring(0,4)+"-"+checkIn.substring(4,6)+"-"+checkIn.substring(6)
-            checkOut = checkOut.substring(0,4)+"-"+checkOut.substring(4,6)+"-"+checkOut.substring(6)
-            println("${i+1}. 예약자: ${name}, 방 번호: ${roomNum}, 체크인: ${checkIn}, 체크아웃:${checkOut}")
-        }
     }
 
     //메뉴 2. 예약 목록 출력
     private fun runMenu2(){
-        println("호텔 예약 목록입니다.")
-        printReservationInfoList()
+        reservationInfoCollection.printReservationInfoCollection()
     }
     //메뉴 3. 예약 목록 (정렬) 출력
     private fun runMenu3(){
-        println("호텔 예약 목록입니다. (정렬 완료)")
-        reservationInfoList.sortBy{it.checkIn}
-        printReservationInfoList()
+        reservationInfoCollection.printSortedReservationInfoCollection()
     }
     //메뉴 4. 시스템 종료
     private fun runMenu4(){
